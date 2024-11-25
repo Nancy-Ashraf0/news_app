@@ -14,21 +14,21 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
-List<int> test=[1,2,3,4];
+  List<int> test = [1, 2, 3, 4];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      body:BuildTabList(test),
+      body: BuildTabList(test),
     );
   }
 
   BuildTabList(List<int> sources) {
-    List<Widget> tabs = [Text("data"),Text("llllll"),Text("121212")].map((test){
+    List<Widget> tabs =
+        [Text("data"), Text("llllll"), Text("121212")].map((test) {
       return buildTab(true);
     }).toList();
-    List<Widget> tabBarViews = [Text("data"),Text("llllll"),Text("121212")]
-       ;
+    List<Widget> tabBarViews = [Text("data"), Text("llllll"), Text("121212")];
     ;
     return DefaultTabController(
       length: sources.length,
@@ -42,10 +42,10 @@ List<int> test=[1,2,3,4];
     );
   }
 
-  Widget buildTab(  bool isSelected) {
+  Widget buildTab(bool isSelected) {
     return Container(
-      margin: const EdgeInsets.only(top: 15,bottom: 30),
-      padding: const EdgeInsets.symmetric(horizontal: 16,vertical: 8),
+      margin: const EdgeInsets.only(top: 15, bottom: 30),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
           color: isSelected ? Colors.green : Colors.white,
           borderRadius: BorderRadius.circular(25),
@@ -58,6 +58,7 @@ List<int> test=[1,2,3,4];
       ),
     );
   }
+
   buildAppBar() {
     return AppBar(
       iconTheme: const IconThemeData(color: Colors.white),
@@ -76,7 +77,6 @@ List<int> test=[1,2,3,4];
       ),
     );
   }
-
 }
 /*
 * FutureBuilder(
