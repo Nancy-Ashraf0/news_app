@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:news_app0/data/api/api_manager.dart';
 import 'package:news_app0/data/api/model/source.dart';
+import 'package:news_app0/ui/screens/news/article_widget.dart';
 import 'package:news_app0/ui/widgets/error_widget.dart';
 import 'package:news_app0/ui/widgets/loading_widget.dart';
 
@@ -14,22 +15,27 @@ class NewsPage extends StatefulWidget {
 }
 
 class _NewsPageState extends State<NewsPage> {
-  List<int> test = [1, 2, 3, 4];
+  List<int> test = [1, 2, 3];
+  List<ArticleWidget> articles=[ArticleWidget(),ArticleWidget()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: buildAppBar(),
-      body: BuildTabList(test),
+      body: Column(
+        children: [Expanded( flex: 2, child: buildTabList(test)),
+        Expanded(flex: 8, child:  ListView.builder(itemCount: articles.length,
+            itemBuilder:(context,index)=> ArticleWidget()))],
+      ),
     );
   }
 
-  BuildTabList(List<int> sources) {
+  Widget buildTabList(List<int> sources) {
     List<Widget> tabs =
-        [Text("data"), Text("llllll"), Text("121212")].map((test) {
+        [Text("0"), Text("llllll"), Text("121212")].map((test) {
       return buildTab(true);
     }).toList();
-    List<Widget> tabBarViews = [Text("data"), Text("llllll"), Text("121212")];
-    ;
+    // List<Widget> tabBarViews = [Text("0"), Text("llllll"), Text("121212")];
+
     return DefaultTabController(
       length: sources.length,
       child: Column(children: [
@@ -37,7 +43,7 @@ class _NewsPageState extends State<NewsPage> {
           tabs: tabs,
           isScrollable: true,
         ),
-        Expanded(child: TabBarView(children: tabBarViews))
+        // Expanded(child: TabBarView(children: tabBarViews))
       ]),
     );
   }

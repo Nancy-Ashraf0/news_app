@@ -41,12 +41,12 @@ class DrawerWidget extends StatelessWidget {
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(left: 10, top: 10),
+            padding: const EdgeInsets.only(left: 10, top: 10),
             child: InkWell(
               onTap: () {
                 onTab(1);
               },
-              child: Row(
+              child: const Row(
                 children: [
                   Icon(Icons.settings),
                   Text("  Settings",

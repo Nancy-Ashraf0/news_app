@@ -12,7 +12,7 @@ class ApiManager {
   static const _articlesEndPoint = "v2/everything";
   static const message = "Something went wrong try again later...";
 
-  static Future<List<Source>> getSources() async {
+   Future<List<Source>> getSources() async {
     try {
       Uri url = Uri.https(_baseUrl, _sourcesEndPoint, {"apiKey": _apiKey});
       Response serverResponse = await get(url);
@@ -28,9 +28,9 @@ class ApiManager {
     }
   }
 
-  static Future<List<Article>> getArticles() async {
+   Future<List<Article>> getArticles(String sourceId) async {
     try {
-      Uri url = Uri.https(_baseUrl, _articlesEndPoint, {"apiKey": _apiKey,"sources":"bbc-sport"});
+      Uri url = Uri.https(_baseUrl, _articlesEndPoint, {"apiKey": _apiKey,"sources":sourceId});
       Response serverResponse = await get(url);
       ArticleResponse articleResponse =
       ArticleResponse.fromJson(jsonDecode(serverResponse.body));

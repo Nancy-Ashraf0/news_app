@@ -1,4 +1,6 @@
-import 'Source.dart';
+import 'package:hive_flutter/adapters.dart';
+import 'package:news_app0/data/api/model/source.dart';
+import 'package:news_app0/domain/entities/article_entity.dart';
 
 class Article {
   Source? source;
@@ -45,5 +47,32 @@ class Article {
     map['publishedAt'] = publishedAt;
     map['content'] = content;
     return map;
+  }
+
+  ArticleEntity toEntity() {
+    return ArticleEntity(
+        author: author,
+        content: content,
+        description: description,
+        publishedAt: publishedAt,
+        sourceEntity: source!.toEntity(),
+        title: title,
+        url: url,
+        urlToImage: urlToImage);
+  }
+}
+
+class ArticleAdapter extends TypeAdapter<Article> {
+  @override
+  final int typeId = 2;
+
+  @override
+  Article read(BinaryReader reader) {
+    return Article.fromJson(reader.read());
+  }
+
+  @override
+  void write(BinaryWriter writer, Article obj) {
+    writer.write(obj.toJson());
   }
 }

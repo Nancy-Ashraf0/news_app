@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:news_app0/data/api/api_manager.dart';
+import 'package:hive_flutter/adapters.dart';
 import 'package:news_app0/ui/screens/home/home.dart';
 import 'package:news_app0/ui/screens/news/news_page.dart';
 import 'package:news_app0/ui/screens/splash/splash.dart';
 
-void main() {
+import 'data/api/model/source.dart';
+
+void main() async {
+  await Hive.initFlutter();
+  Hive.registerAdapter(SourceAdapter());
   runApp(const MyApp());
 }
 

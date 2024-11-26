@@ -1,5 +1,4 @@
 import 'package:news_app0/data/api/model/base_response.dart';
-
 import 'article.dart';
 
 class ArticleResponse extends BaseResponse {
@@ -11,7 +10,7 @@ class ArticleResponse extends BaseResponse {
     this.articles,
   });
 
-  ArticleResponse.fromJson(dynamic json):super.fromJson(json) {
+  ArticleResponse.fromJson(dynamic json) : super.fromJson(json) {
     totalResults = json['totalResults'];
     if (json['articles'] != null) {
       articles = [];

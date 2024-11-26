@@ -1,3 +1,6 @@
+import 'package:hive_flutter/adapters.dart';
+import 'package:news_app0/domain/entities/source_entity.dart';
+
 class Source {
   String? id;
   String? name;
@@ -16,6 +19,10 @@ class Source {
     this.country,
   });
 
+  SourceEntity toEntity(){
+    return SourceEntity(id,name);
+  }
+
   Source.fromJson(dynamic json) {
     id = json['id'];
     name = json['name'];
@@ -25,7 +32,6 @@ class Source {
     language = json['language'];
     country = json['country'];
   }
-
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};
@@ -37,5 +43,20 @@ class Source {
     map['language'] = language;
     map['country'] = country;
     return map;
+  }
+}
+
+class SourceAdapter extends TypeAdapter<Source> {
+  @override
+  final int typeId = 1;
+
+  @override
+  Source read(BinaryReader reader) {
+    return Source.fromJson(reader.read());
+  }
+
+  @override
+  void write(BinaryWriter writer, Source obj) {
+    writer.write(obj.toJson());
   }
 }
