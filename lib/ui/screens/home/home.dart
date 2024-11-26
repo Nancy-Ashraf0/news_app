@@ -6,21 +6,21 @@ import 'package:news_app0/utils/widgets/drawer_widget.dart';
 class Home extends StatefulWidget {
   static const String routeName = "home";
 
-   Home({super.key});
+  Home({super.key});
 
   @override
   State<Home> createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
-  int currentIndex=0;
-  List<Widget> tabs=[const CategoriesScreen(),const SettingsScreen()];
+  int currentIndex = 0;
+  List<Widget> tabs = [const CategoriesScreen(), const SettingsScreen()];
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: DrawerWidget(onTab: (index){
-        currentIndex=index;
+      drawer: DrawerWidget(onTab: (index) {
+        currentIndex = index;
         setState(() {});
         Navigator.pop(context);
       }),

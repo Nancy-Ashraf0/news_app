@@ -40,7 +40,7 @@ class DrawerWidget extends StatelessWidget {
               ),
             ),
           ),
-           Padding(
+          Padding(
             padding: EdgeInsets.only(left: 10, top: 10),
             child: InkWell(
               onTap: () {
