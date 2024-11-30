@@ -57,6 +57,7 @@ class ArticleDetailsScreen extends StatelessWidget {
 
   AppBar buildAppBar(BuildContext context) {
     return AppBar(
+      iconTheme: IconThemeData(color: Colors.white),
       centerTitle: true,
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
@@ -64,7 +65,7 @@ class ArticleDetailsScreen extends StatelessWidget {
               bottomRight: Radius.circular(50))),
       backgroundColor: Colors.green,
       title: Text(
-        context.tr("newsTitle"),
+        articleEntity.sourceEntity!.name ?? " News Title",
         style: TextStyle(color: Colors.white),
         textAlign: TextAlign.center,
       ),

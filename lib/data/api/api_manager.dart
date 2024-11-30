@@ -9,7 +9,7 @@ import 'package:news_app0/data/api/model/sources_response.dart';
 
 @injectable
 class ApiManager {
-  static const _apiKey = "5c18d836451d4c7d8cbff640067c09ea";
+  static const _apiKey = "30f732bd30b34089a10f65d3bd84080f";
   static const _baseUrl = "newsapi.org";
   static const _sourcesEndPoint = "v2/top-headlines/sources";
   static const _articlesEndPoint = "v2/everything";
