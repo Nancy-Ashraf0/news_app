@@ -18,11 +18,15 @@ dependencies:
   flutter_bloc: ^8.1.6
   get_it: ^8.0.2
   injectable: ^2.5.0
+  easy_localization: ^3.0.7
+  skeletonizer: ^1.4.2
+  url_launcher: ^6.3.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
-
+  injectable_generator: ^2.6.2
+  build_runner: ^2.4.13
   flutter_lints: ^4.0.0
 
 flutter:
@@ -32,5 +36,6 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/translations/
   #   - images/a_dot_ham.jpeg
 

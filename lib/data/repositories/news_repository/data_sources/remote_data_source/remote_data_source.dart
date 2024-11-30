@@ -1,15 +1,10 @@
-import 'package:news_app0/data/api/api_manager.dart';
-import 'package:news_app0/data/api/model/article.dart';
+import '../../../../api/model/article.dart';
 import '../../../../api/model/source.dart';
 
-class RemoteDataSource {
-  ApiManager apiManager;
-  RemoteDataSource(this.apiManager);
-  Future<List<Source>> getSources(String categoryId) async {
-    return apiManager.getSources();
-  }
+abstract class RemoteDataSource {
+  Future<List<Article>> getArticles(String sourceId);
 
-  Future<List<Article>> getArticles(String sourceId ) async {
-    return apiManager.getArticles(sourceId);
-  }
+  Future<List<Source>> getSources(String categoryId);
+
+  Future<List<Article>> getArticlesByQ(String sourceId, String q);
 }

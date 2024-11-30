@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 
 class DrawerWidget extends StatelessWidget {
@@ -13,10 +14,10 @@ class DrawerWidget extends StatelessWidget {
           Container(
             height: MediaQuery.of(context).size.height * .13,
             decoration: const BoxDecoration(color: Color(0xff39A552)),
-            child: const Center(
+            child: Center(
                 child: Text(
-              "News App!",
-              style: TextStyle(
+              context.tr("appName"),
+              style: const TextStyle(
                   fontWeight: FontWeight.w400,
                   fontSize: 22,
                   color: Colors.white),
@@ -28,11 +29,11 @@ class DrawerWidget extends StatelessWidget {
               onTap: () {
                 onTab(0);
               },
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.list),
-                  Text("  Categories",
-                      style: TextStyle(
+                  const Icon(Icons.list),
+                  Text("  ${context.tr("categories")}",
+                      style: const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 24,
                       ))
@@ -46,11 +47,11 @@ class DrawerWidget extends StatelessWidget {
               onTap: () {
                 onTab(1);
               },
-              child: const Row(
+              child: Row(
                 children: [
-                  Icon(Icons.settings),
-                  Text("  Settings",
-                      style: TextStyle(
+                  const Icon(Icons.settings),
+                  Text("  ${context.tr("settings")}",
+                      style: const TextStyle(
                         fontWeight: FontWeight.w700,
                         fontSize: 24,
                       ))

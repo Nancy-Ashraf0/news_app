@@ -1,120 +1,224 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
-import 'package:news_app0/data/api/api_manager.dart';
-import 'package:news_app0/data/api/model/source.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:news_app0/domain/di/di.dart';
+import 'package:news_app0/domain/entities/article_entity.dart';
+import 'package:news_app0/ui/screens/article_details_screen/articles_details_Screen.dart';
 import 'package:news_app0/ui/screens/news/article_widget.dart';
+import 'package:news_app0/ui/screens/news/cubits/news_cubit.dart';
+import 'package:news_app0/ui/screens/news/cubits/news_state.dart';
 import 'package:news_app0/ui/widgets/error_widget.dart';
-import 'package:news_app0/ui/widgets/loading_widget.dart';
+import 'package:news_app0/utils/widgets/choice_chip.dart';
 
 class NewsPage extends StatefulWidget {
   static const String routeName = "news";
 
-  NewsPage({super.key});
-
+  const NewsPage({super.key});
   @override
   State<NewsPage> createState() => _NewsPageState();
 }
 
 class _NewsPageState extends State<NewsPage> {
-  List<int> test = [1, 2, 3];
-  List<ArticleWidget> articles=[ArticleWidget(),ArticleWidget()];
+  NewsCubit newsCubit = getIt();
+  late String sourceId;
+  late String categoryId;
+  int selectedChip = 0;
+  late List<ArticleEntity> searchedArticles;
+  bool isSearching = false;
+  final searchController = TextEditingController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        newsCubit.getSources(categoryId);
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: buildAppBar(),
-      body: Column(
-        children: [Expanded( flex: 2, child: buildTabList(test)),
-        Expanded(flex: 8, child:  ListView.builder(itemCount: articles.length,
-            itemBuilder:(context,index)=> ArticleWidget()))],
-      ),
-    );
-  }
-
-  Widget buildTabList(List<int> sources) {
-    List<Widget> tabs =
-        [Text("0"), Text("llllll"), Text("121212")].map((test) {
-      return buildTab(true);
-    }).toList();
-    // List<Widget> tabBarViews = [Text("0"), Text("llllll"), Text("121212")];
-
-    return DefaultTabController(
-      length: sources.length,
-      child: Column(children: [
-        TabBar(
-          tabs: tabs,
-          isScrollable: true,
+    categoryId = ModalRoute.of(context)!.settings.arguments as String;
+    return BlocProvider(
+      create: (BuildContext context) => newsCubit,
+      child: Scaffold(
+        appBar: _buildAppBar(),
+        body: Column(
+          children: [
+            Container(
+                padding: const EdgeInsets.all(8),
+                height: 80,
+                child: buildSourceNamesList()),
+            buildArticlesList()
+          ],
         ),
-        // Expanded(child: TabBarView(children: tabBarViews))
-      ]),
-    );
-  }
-
-  Widget buildTab(bool isSelected) {
-    return Container(
-      margin: const EdgeInsets.only(top: 15, bottom: 30),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-          color: isSelected ? Colors.green : Colors.white,
-          borderRadius: BorderRadius.circular(25),
-          border: Border.all(
-            color: Colors.green,
-          )),
-      child: Text(
-        "blablabla",
-        style: TextStyle(color: isSelected ? Colors.white : Colors.green),
       ),
     );
   }
 
-  buildAppBar() {
+  Widget buildArticlesList() {
+    return BlocBuilder<NewsCubit, NewsScreenState>(builder: (context, state) {
+      if (state is ArticleState) {
+        if (state.articleState.isSuccess) {
+          return Expanded(
+            child: ListView.builder(
+                itemCount:
+                    (state.articleState.getData as List<ArticleEntity>).length,
+                itemBuilder: (context, index) => InkWell(
+                      onTap: () {
+                        Navigator.pushNamed(
+                            context, ArticleDetailsScreen.routeName,
+                            arguments: (state.articleState.getData
+                                as List<ArticleEntity>)[index]);
+                      },
+                      child: ArticleWidget(
+                          articleEntity: (state.articleState.getData
+                              as List<ArticleEntity>)[index]),
+                    )),
+          );
+        } else if (state.articleState.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state.articleState.isError) {
+          return MyError(
+              errorMessage: state.articleState.error.errorMessage,
+              onRetry: () {
+                newsCubit.getArticles(sourceId);
+              });
+        }
+      }
+      return const Center(child: CircularProgressIndicator());
+    });
+  }
+
+  Widget buildSourceNamesList() {
+    return BlocBuilder<NewsCubit, NewsScreenState>(
+        buildWhen: (previous, current) {
+      return (current is SourcesState);
+    }, builder: (context, state) {
+      if (state is SourcesState) {
+        if (state.sourceState.isSuccess) {
+          if (selectedChip == 0) {
+            sourceId = ((state.sourceState.getData)[0].id!);
+            newsCubit.getArticles(sourceId);
+          }
+          return ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: (state.sourceState.getData).length,
+              itemBuilder: (context, index) => CustomChoiceChip(
+                  label: (state.sourceState.getData)[index].name!,
+                  onSelected: () {
+                    selectedChip = index;
+                    sourceId = (state.sourceState.getData)[index].id!;
+                    newsCubit.getArticles(sourceId);
+                    setState(() {});
+                  },
+                  isSelected: selectedChip == index));
+        } else if (state.sourceState.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state.sourceState.isError) {
+          return MyError(
+              errorMessage: state.sourceState.error.errorMessage,
+              onRetry: () {
+                newsCubit.getSources(categoryId);
+              });
+        }
+      }
+      return const Center(child: CircularProgressIndicator());
+    });
+  }
+
+  AppBar _buildAppBar() {
     return AppBar(
+      centerTitle: true,
       iconTheme: const IconThemeData(color: Colors.white),
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(50),
               bottomRight: Radius.circular(50))),
       backgroundColor: Colors.green,
-      title: Container(
-        margin: const EdgeInsets.only(left: 80),
-        child: const Text(
-          "News App",
-          style: TextStyle(color: Colors.white),
-          textAlign: TextAlign.center,
-        ),
+      title: isSearching ? buildSearchTextField() : buildAppBarTitle(),
+      actions: buildAppBarActions(),
+    );
+  }
+
+  Widget buildSearchTextField() {
+    return TextField(
+      controller: searchController,
+      cursorColor: Colors.white,
+      decoration: InputDecoration(
+        border: InputBorder.none,
+        hintText: context.tr("searchHint"),
+        hintStyle: const TextStyle(
+            color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400),
       ),
+      style: const TextStyle(
+          color: Colors.white, fontSize: 14, fontWeight: FontWeight.w400),
+      onChanged: (searchedArticle) {
+        searchedFor(sourceId, searchedArticle);
+      },
+    );
+  }
+
+  void searchedFor(String sourceId, String q) {
+    newsCubit.getFilteredArticles(sourceId, q);
+  }
+
+  List<Widget> buildAppBarActions() {
+    if (isSearching) {
+      return [
+        IconButton(
+          onPressed: () {
+            clearSearch();
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.clear,
+          ),
+          color: Colors.white,
+        ),
+      ];
+    } else {
+      return [
+        IconButton(
+          onPressed: () {
+            startSearching();
+          },
+          icon: const Icon(
+            Icons.search,
+          ),
+          color: Colors.white,
+        )
+      ];
+    }
+  }
+
+  void startSearching() {
+    ModalRoute.of(context)!
+        .addLocalHistoryEntry(LocalHistoryEntry(onRemove: () {
+      stopSearching();
+    }));
+    setState(() {
+      isSearching = true;
+    });
+  }
+
+  void stopSearching() {
+    clearSearch();
+    isSearching = false;
+    setState(() {});
+  }
+
+  void clearSearch() {
+    searchController.clear();
+    // setState(() {});
+  }
+
+  Widget buildAppBarTitle() {
+    return Text(
+      context.tr(categoryId),
+      style: const TextStyle(color: Colors.white),
+      textAlign: TextAlign.center,
     );
   }
 }
-/*
-* FutureBuilder(
-          future: ApiManager.getSources(),
-          builder: (context, snapshot) {
-            if (snapshot.hasError) {
-              return MyError(
-                errorMessage: snapshot.error.toString(),
-                onRetry: () {},
-              );
-            } else if (snapshot.hasData) {
-              return BuildTabList(snapshot.data!);
-            } else {
-              return LoadingWidget();
-            }
-          })*/
-/*
-* BuildTabList(List<Source> sources) {
-    List<Widget> tabs = sources.map((source) {
-      return buildTab(source, true);
-    }).toList();
-    List<Widget> tabBarViews = sources.map((source) {
-      return Text(source.name ?? "");
-    }).toList();
-    return DefaultTabController(
-      length: sources.length,
-      child: Column(children: [
-        TabBar(
-          tabs: tabs,
-          isScrollable: true,
-        ),
-        Expanded(child: TabBarView(children: tabBarViews))
-      ]),
-    );
-  }*/

@@ -1,25 +1,28 @@
-abstract class ApiState <T>{
-  bool get isSuccess{
+abstract class ApiState<T> {
+  bool get isSuccess {
     return this is SuccessApiState;
   }
-  bool get isLoading{
+
+  bool get isLoading {
     return this is LoadingApiState;
   }
-  bool get isError{
+
+  bool get isError {
     return this is ErrorApiState;
   }
-  ErrorApiState get error{
+
+  ErrorApiState get error {
     return this as ErrorApiState;
   }
-  T get getData{
+
+  T get getData {
     return (this as SuccessApiState<T>).data;
   }
-
 }
 
-class LoadingApiState extends ApiState {}
+class LoadingApiState extends ApiState<void> {}
 
-class SuccessApiState<T> extends ApiState {
+class SuccessApiState<T> extends ApiState<T> {
   T data;
   SuccessApiState(this.data);
 }

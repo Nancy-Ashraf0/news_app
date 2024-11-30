@@ -19,8 +19,8 @@ class Source {
     this.country,
   });
 
-  SourceEntity toEntity(){
-    return SourceEntity(id,name);
+  SourceEntity toEntity() {
+    return SourceEntity(id, name);
   }
 
   Source.fromJson(dynamic json) {

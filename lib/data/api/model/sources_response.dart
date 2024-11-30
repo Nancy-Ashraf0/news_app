@@ -8,7 +8,7 @@ class SourcesResponse extends BaseResponse {
     this.sources,
   });
 
-  SourcesResponse.fromJson(dynamic json) : super.fromJson(json){
+  SourcesResponse.fromJson(dynamic json) : super.fromJson(json) {
     if (json['sources'] != null) {
       sources = [];
       json['sources'].forEach((v) {
@@ -16,7 +16,6 @@ class SourcesResponse extends BaseResponse {
       });
     }
   }
-
 
   Map<String, dynamic> toJson() {
     final map = <String, dynamic>{};

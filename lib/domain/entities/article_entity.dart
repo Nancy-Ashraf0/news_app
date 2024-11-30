@@ -15,5 +15,7 @@ class ArticleEntity {
       required this.title,
       required this.content,
       required this.description,
-      required this.publishedAt,required this.url,required this.urlToImage});
+      required this.publishedAt,
+      required this.url,
+      required this.urlToImage});
 }
